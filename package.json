@@ -16,5 +16,9 @@
   },
   "engines": {
     "node": "^8.4.0"
-  }
+  },
+  "buildpacks": [
+    { "url": "heroku/nodejs" },
+    { "url": "https://github.com/heroku/heroku-buildpack-google-chrome" }
+  ]
 }
