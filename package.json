@@ -4,12 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "cheerio": "^1.0.0-rc.2",
+    "inquirer": "^5.1.0",
     "puppeteer": "^0.11.0",
     "request": "^2.83.0",
     "request-promise": "^4.2.2"

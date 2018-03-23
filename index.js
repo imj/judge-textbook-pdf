@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 const fs = require('fs');
 const path = require('path');
-const request = require('request-promise');
+const inquirer = require('inquirer');
 const cheerio = require('cheerio');
+const request = require('request-promise');
 const puppeteer = require('puppeteer');
 const http = require('http');
 
@@ -134,8 +135,27 @@ async function init(lang, output) {
     fs.unlinkSync(TMP_FILE);
 }
 
-init('IT', `${__dirname}/output.pdf`)
-    .catch(e => {
-        console.error(e);
-        process.exit(1);
-    });
+const prompt = inquirer.createPromptModule();
+
+prompt([{
+    name: 'language',
+    type: 'list',
+    message: 'Choose the language for Textbook',
+    choices: [
+        'IT',
+        'EN',
+        'FR',
+        'PT',
+        'RU',
+    ]
+}, {
+    name: 'output',
+    type: 'input',
+    message: 'Specify output file for your pdf',
+    default: answers => `${__dirname}/Textbook ${answers.language}.pdf`
+}
+]).then(answers => init(answers.language, answers.output))
+.catch(e => {
+    console.error(e);
+    process.exit(1);
+});
