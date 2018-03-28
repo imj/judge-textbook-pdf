@@ -2,7 +2,7 @@ const cheerio = require('cheerio');
 const request = require('request-promise');
 const contents = require('./textbook-index.json');
 
-async function getPageContent(url) {
+async function getPageContent(url, showCardImages) {
     const response = await request(`${url}&printable=yes`);
 
     const $ = cheerio.load(response);
@@ -17,9 +17,14 @@ async function getPageContent(url) {
         .prev()
         .remove();
     $('.links').remove();
-    $('img.cardzoomer').attr('style', '');
 
-    console.log('Caricata pagina ', url);
+    if (showCardImages) {
+        $('img.cardzoomer').attr('style', '');
+    } else {
+        $('img.cardzoomer').remove();
+    }
+
+    console.log('Caricata pagina ', url); //eslint-disable-line
 
     return $('#bodyContent')
         .html()
@@ -33,11 +38,11 @@ async function getPageContent(url) {
         );
 }
 
-function fetchContents(langCode) {
+function fetchContents(langCode, showCardImages) {
     return Promise.all(
         contents
             .map(url => url.replace('__LANG__', langCode))
-            .map(url => getPageContent(url))
+            .map(url => getPageContent(url, showCardImages))
     );
 }
 

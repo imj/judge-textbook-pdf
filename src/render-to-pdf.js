@@ -9,7 +9,7 @@ module.exports = async function(options) {
     const TMP_FILE = `/tmp/${Date.now()}.html`;
     const PDF_FILE = path.resolve(options.output);
 
-    const contents = await fetchContents(langCode);
+    const contents = await fetchContents(langCode, options.showCardImages);
     const container = await getContainer();
 
     contents.forEach(content => container('body').append(content));
