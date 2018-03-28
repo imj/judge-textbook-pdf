@@ -4,10 +4,10 @@ const puppeteer = require('puppeteer');
 const getContainer = require('./container');
 const fetchContents = require('./contents');
 
-module.exports = async function(language, outputFile) {
-    const langCode = language === 'EN' ? '' : `${language}:`;
+module.exports = async function(options) {
+    const langCode = options.language === 'EN' ? '' : `${options.language}:`;
     const TMP_FILE = `/tmp/${Date.now()}.html`;
-    const PDF_FILE = path.resolve(outputFile);
+    const PDF_FILE = path.resolve(options.output);
 
     const contents = await fetchContents(langCode);
     const container = await getContainer();
@@ -15,7 +15,7 @@ module.exports = async function(language, outputFile) {
     contents.forEach(content => container('body').append(content));
 
     fs.writeFileSync(TMP_FILE, container.html());
-    console.log('Apro con Chromium: ', TMP_FILE);
+    console.log('Apro con Chromium: ', TMP_FILE); //eslint-disable-line
 
     // Generate PDF with chrome
     const browser = await puppeteer.launch();
@@ -23,7 +23,7 @@ module.exports = async function(language, outputFile) {
 
     await page.goto(`file://${TMP_FILE}`);
 
-    console.log('Genero il pdf');
+    console.log('Genero il pdf'); //eslint-disable-line
     await page.pdf({
         path: PDF_FILE,
         format: 'A4',

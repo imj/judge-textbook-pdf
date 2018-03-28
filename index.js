@@ -18,8 +18,8 @@ prompt([
         default: answers => `${__dirname}/Textbook ${answers.language}.pdf`,
     },
 ])
-    .then(answers => renderToPdf(answers.language, answers.output))
+    .then(answers => renderToPdf(answers))
     .catch(e => {
-        console.error(e);
+        console.error(e); //eslint-disable-line
         process.exit(1);
     });
