@@ -12,6 +12,12 @@ prompt([
         choices: ['IT', 'EN', 'FR', 'PT', 'RU'],
     },
     {
+        name: 'showCardImages',
+        type: 'confirm',
+        message: 'Do you want card images of examples?',
+        default: true,
+    },
+    {
         name: 'output',
         type: 'input',
         message: 'Specify output file for your pdf',
