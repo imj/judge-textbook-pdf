@@ -20,3 +20,7 @@ This script converts [Judge Candidate Textbook](http://test.italianmagicjudges.n
 
 ### Strategy
 It extracts all html content from Textbook pages; then it merges them in one single big html file and it uses Chrome Headless (managed by [puppeteer](https://github.com/GoogleChrome/puppeteer)) to generate a printable PDF.
+
+
+## LICENSE
+This package is available under the [MIT license](LICENSE).

@@ -1,5 +1,6 @@
 {
   "name": "judge-textbook-pdf",
+  "private": true,
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,8 +9,8 @@
     "lint": "eslint --fix index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Matteo Manchi <matteo.manchi@gmail.com>",
+  "license": "MIT",
   "dependencies": {
     "cheerio": "^1.0.0-rc.2",
     "inquirer": "^5.1.0",
