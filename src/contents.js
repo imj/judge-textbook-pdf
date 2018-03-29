@@ -4,10 +4,24 @@ const request = require('request-promise');
 const contents = require('./textbook-index.json');
 
 const BASE_URL = 'http://test.italianmagicjudges.net/wiki';
+const DEFAULT_LANG = 'EN';
 
-async function getPageContent(url, showCardImages) {
-    const response = await request(`${url}&printable=yes`);
-    console.log('Caricata pagina ', url); //eslint-disable-line
+async function getPageContent(page, langCode, showCardImages) {
+    var response;
+    var url;
+    try {
+        url = page.replace('__LANG__', getLangCode(langCode));
+        response = await request(`${url}&printable=yes`);
+        console.log('Caricata pagina ', url); //eslint-disable-line
+    } catch (e) {
+        if (e.statusCode === 404) {
+            url = page.replace('__LANG__', getLangCode(DEFAULT_LANG));
+            response = await request(`${url}&printable=yes`);
+            console.log('Caricata pagina ', url); //eslint-disable-line
+        } else {
+            throw e;
+        }
+    }
 
     const $ = cheerio.load(response);
 
@@ -56,11 +70,13 @@ function hashUrl(url) {
     );
 }
 
+function getLangCode(lang) {
+    return lang === 'EN' ? '' : `${lang}:`;
+}
+
 function fetchContents(langCode, showCardImages) {
     return Promise.all(
-        contents
-            .map(url => url.replace('__LANG__', langCode))
-            .map(url => getPageContent(url, showCardImages))
+        contents.map(url => getPageContent(url, langCode, showCardImages))
     );
 }
 
