@@ -20,8 +20,8 @@ prompt([
     {
         name: 'output',
         type: 'input',
-        message: 'Specify output file for your pdf',
-        default: answers => `${__dirname}/Textbook ${answers.language}.pdf`,
+        message: 'Specify output file name for your pdf',
+        default: answers => `Textbook ${answers.language}.pdf`,
     },
 ])
     .then(answers => renderToPdf(answers))

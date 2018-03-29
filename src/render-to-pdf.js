@@ -7,7 +7,7 @@ const fetchContents = require('./contents');
 module.exports = async function(options) {
     const langCode = options.language === 'EN' ? '' : `${options.language}:`;
     const TMP_FILE = `/tmp/${Date.now()}.html`;
-    const PDF_FILE = path.resolve(options.output);
+    const PDF_FILE = path.resolve(`${__dirname}/../output/${options.output}`);
 
     const contents = await fetchContents(langCode, options.showCardImages);
     const container = await getContainer();
