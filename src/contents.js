@@ -1,9 +1,13 @@
+const crypto = require('crypto');
 const cheerio = require('cheerio');
 const request = require('request-promise');
 const contents = require('./textbook-index.json');
 
+const BASE_URL = 'http://test.italianmagicjudges.net/wiki';
+
 async function getPageContent(url, showCardImages) {
     const response = await request(`${url}&printable=yes`);
+    console.log('Caricata pagina ', url); //eslint-disable-line
 
     const $ = cheerio.load(response);
 
@@ -24,18 +28,32 @@ async function getPageContent(url, showCardImages) {
         $('img.cardzoomer').remove();
     }
 
-    console.log('Caricata pagina ', url); //eslint-disable-line
+    $('#mw-content-text')
+        .attr('id', '')
+        .prev('h1')
+        .attr('id', hashUrl(url));
 
     return $('#bodyContent')
         .html()
+        .replace(/src="\/wiki/g, `src="${BASE_URL}`)
         .replace(
-            /(src|href)="\/wiki/g,
-            '$1="http://test.italianmagicjudges.net/wiki'
+            /href="\/wiki([^"]+)"/g,
+            (_, url) => `href="#${hashUrl(BASE_URL + url)}"`
         )
         .replace(
             /javascript:autoCardWindow\(&apos;([^)]+)&apos;\)/g,
             'http://gatherer.wizards.com/Pages/Card/Details.aspx?name=$1'
         );
+}
+
+function hashUrl(url) {
+    return (
+        'JCT' +
+        crypto
+            .createHash('md5')
+            .update(url)
+            .digest('hex')
+    );
 }
 
 function fetchContents(langCode, showCardImages) {
