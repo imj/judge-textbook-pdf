@@ -12,11 +12,11 @@
   "author": "Matteo Manchi <matteo.manchi@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.18.0",
     "cheerio": "^1.0.0-rc.2",
     "inquirer": "^5.1.0",
     "puppeteer": "^0.11.0",
-    "request": "^2.83.0",
-    "request-promise": "^4.2.2"
+    "request": "^2.83.0"
   },
   "engines": {
     "node": "^8.4.0"

@@ -1,6 +1,6 @@
 const crypto = require('crypto');
 const cheerio = require('cheerio');
-const request = require('request-promise');
+const axios = require('axios');
 const contents = require('./textbook-index.json');
 
 const BASE_URL = 'http://test.italianmagicjudges.net/wiki';
@@ -11,19 +11,19 @@ async function getPageContent(page, langCode, showCardImages) {
     var url;
     try {
         url = page.replace('__LANG__', getLangCode(langCode));
-        response = await request(`${url}&printable=yes`);
+        response = await axios.get(`${url}&printable=yes`);
         console.log('Caricata pagina ', url); //eslint-disable-line
     } catch (e) {
-        if (e.statusCode === 404) {
+        if (e.response.status === 404) {
             url = page.replace('__LANG__', getLangCode(DEFAULT_LANG));
-            response = await request(`${url}&printable=yes`);
+            response = await axios.get(`${url}&printable=yes`);
             console.log('Caricata pagina ', url); //eslint-disable-line
         } else {
             throw e;
         }
     }
 
-    const $ = cheerio.load(response);
+    const $ = cheerio.load(response.data);
 
     // Clear some useless tags
     $('.printfooter').remove();
