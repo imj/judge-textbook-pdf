@@ -1,11 +1,12 @@
 const fs = require('fs');
+const tmp = require('tmp');
 const path = require('path');
 const puppeteer = require('puppeteer');
 const getContainer = require('./container');
 const fetchContents = require('./contents');
 
 module.exports = async function(options) {
-    const TMP_FILE = `/tmp/${Date.now()}.html`;
+    const TMP_FILE = tmp.fileSync({postfix: '.html'}).name;
     const PDF_FILE = path.resolve(`${__dirname}/../output/${options.output}`);
 
     const contents = await fetchContents(

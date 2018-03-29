@@ -6,17 +6,21 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
+    "build-all": "node upload-s3.js",
     "lint": "eslint --fix index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Matteo Manchi <matteo.manchi@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "aws-sdk": "^2.216.1",
     "axios": "^0.18.0",
     "cheerio": "^1.0.0-rc.2",
     "inquirer": "^5.1.0",
     "puppeteer": "^0.11.0",
-    "request": "^2.83.0"
+    "request": "^2.83.0",
+    "rimraf": "^2.6.2",
+    "tmp": "0.0.33"
   },
   "engines": {
     "node": "^8.4.0"
