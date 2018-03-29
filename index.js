@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 const inquirer = require('inquirer');
 const renderToPdf = require('./src/render-to-pdf');
+const languages = require('./src/available-languages');
 
 const prompt = inquirer.createPromptModule();
 
@@ -9,7 +10,7 @@ prompt([
         name: 'language',
         type: 'list',
         message: 'Choose the language for Textbook',
-        choices: ['IT', 'EN', 'FR', 'PT', 'RU'],
+        choices: languages,
     },
     {
         name: 'showCardImages',
