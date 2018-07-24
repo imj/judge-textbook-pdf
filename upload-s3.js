@@ -27,61 +27,38 @@ function uploadToS3(file) {
         };
 
         // call S3 to retrieve upload file to specified bucket
+        console.log('Uploading ', file); //eslint-disable-line
         s3.upload(uploadParams, function(err, data) {
             if (err) {
                 return reject(err);
             }
 
-            console.log('Upload Success', data.Location);
+            console.log('Upload Success', data.Location); //eslint-disable-line
             resolve(data.Location);
         });
     });
 }
 
-function uploadDirectoryToS3(dir) {
-    return fs
-        .readdirSync(dir)
-        .filter(f => f.indexOf('Textbook') === 0)
-        .map(file => uploadToS3(`${dir}/${file}`));
-}
-
 const run = async () => {
     await clearOutput();
 
-    for (let language of languages) {
-        await Promise.all([
-            renderToPdf({
-                language,
-                showCardImages: true,
-                output: `Textbook ${language}.pdf`,
-            }),
-            renderToPdf({
-                language,
-                showCardImages: false,
-                output: `Textbook ${language} light.pdf`,
-            }),
-        ]);
+    for (const language of languages) {
+        const fileWithImages = await renderToPdf({
+            language,
+            showCardImages: true,
+            output: `Textbook ${language}.pdf`,
+        });
+        await uploadToS3(fileWithImages);
+
+        const fileWithoutImages = await renderToPdf({
+            language,
+            showCardImages: false,
+            output: `Textbook ${language} light.pdf`,
+        });
+        await uploadToS3(fileWithoutImages);
+
+        console.log(`${language} Textbook completed`); //eslint-disable-line
     }
-
-    // const requests = languages
-    //     .map(language => [
-    //         renderToPdf({
-    //             language,
-    //             showCardImages: true,
-    //             output: `Textbook ${language}.pdf`,
-    //         }),
-    //         renderToPdf({
-    //             language,
-    //             showCardImages: false,
-    //             output: `Textbook ${language} light.pdf`,
-    //         }),
-    //     ])
-    //     // flat array
-    //     .reduce((a, b) => a.concat(b));
-
-    // await Promise.all(requests);
-
-    await uploadDirectoryToS3(OUTPUT_DIR);
 };
 
 run();

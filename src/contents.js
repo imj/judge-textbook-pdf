@@ -6,18 +6,31 @@ const contents = require('./textbook-index.json');
 const BASE_URL = 'http://test.italianmagicjudges.net/wiki';
 const DEFAULT_LANG = 'EN';
 
+const DATA_CACHE = {};
+
+async function fetchPageWithCache(url) {
+    if (DATA_CACHE[url]) {
+        // console.log('Cache hit ', url); //eslint-disable-line
+        return DATA_CACHE[url];
+    }
+
+    // console.log('Downloading page ', url); //eslint-disable-line
+    const response = await axios.get(url);
+    DATA_CACHE[url] = response;
+    return response;
+}
+
 async function getPageContent(page, langCode, showCardImages) {
     var response;
     var url;
+
     try {
         url = page.replace('__LANG__', getLangCode(langCode));
-        response = await axios.get(`${url}&printable=yes`);
-        console.log('Caricata pagina ', url); //eslint-disable-line
+        response = await fetchPageWithCache(`${url}&printable=yes`);
     } catch (e) {
         if (e.response.status === 404) {
             url = page.replace('__LANG__', getLangCode(DEFAULT_LANG));
-            response = await axios.get(`${url}&printable=yes`);
-            console.log('Caricata pagina ', url); //eslint-disable-line
+            response = await fetchPageWithCache(`${url}&printable=yes`);
         } else {
             throw e;
         }

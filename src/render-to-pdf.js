@@ -9,6 +9,7 @@ module.exports = async function(options) {
     const TMP_FILE = tmp.fileSync({postfix: '.html'}).name;
     const PDF_FILE = path.resolve(`${__dirname}/../output/${options.output}`);
 
+    console.log(`Downloading contents for ${options.language} ${options.showCardImages}`); //eslint-disable-line
     const contents = await fetchContents(
         options.language,
         options.showCardImages
@@ -18,7 +19,7 @@ module.exports = async function(options) {
     contents.forEach(content => container('body').append(content));
 
     fs.writeFileSync(TMP_FILE, container.html());
-    console.log('Apro con Chromium: ', TMP_FILE); //eslint-disable-line
+    console.log('Opening in browser: ', TMP_FILE); //eslint-disable-line
 
     // Generate PDF with chrome
     const browser = await puppeteer.launch();
@@ -26,7 +27,7 @@ module.exports = async function(options) {
 
     await page.goto(`file://${TMP_FILE}`);
 
-    console.log('Genero il pdf'); //eslint-disable-line
+    console.log('Generating PDF'); //eslint-disable-line
     await page.pdf({
         path: PDF_FILE,
         format: 'A4',
@@ -42,4 +43,6 @@ module.exports = async function(options) {
     await browser.close();
 
     fs.unlinkSync(TMP_FILE);
+
+    return PDF_FILE;
 };
